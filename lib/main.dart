@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+
+import 'screens/home_screen.dart';
+
+void main() => runApp(const TraditionalBirdieApp());
+
+class TraditionalBirdieApp extends StatelessWidget {
+  const TraditionalBirdieApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Đá Cầu Score',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFD32F2F)),
+        useMaterial3: true,
+      ),
+      home: const HomeScreen(),
+    );
+  }
+}
