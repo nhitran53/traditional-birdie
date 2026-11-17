@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/da_cau_match.dart';
+import '../models/shuttlecock_match.dart';
 import 'juggle_screen.dart';
 import 'match_screen.dart';
 
@@ -12,8 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _teamA = TextEditingController(text: 'Đội Đỏ');
-  final _teamB = TextEditingController(text: 'Đội Xanh');
+  final _teamA = TextEditingController(text: 'Red Team');
+  final _teamB = TextEditingController(text: 'Blue Team');
   int _pointsPerSet = 21;
   int _bestOf = 3;
 
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String name(TextEditingController c, String fallback) =>
         c.text.trim().isEmpty ? fallback : c.text.trim();
 
-    final match = DaCauMatch(
+    final match = ShuttlecockMatch(
       teamNames: [name(_teamA, 'Team 1'), name(_teamB, 'Team 2')],
       pointsPerSet: _pointsPerSet,
       setsToWin: (_bestOf + 1) ~/ 2,
@@ -43,13 +43,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Đá Cầu Score')),
+      appBar: AppBar(title: const Text('Shuttlecock Score')),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           const Text('🪶', textAlign: TextAlign.center, style: TextStyle(fontSize: 64)),
           Text(
-            'Vietnamese shuttlecock kicking',
+            'Traditional shuttlecock kicking',
             textAlign: TextAlign.center,
             style: theme.textTheme.titleMedium,
           ),
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Text('Juggling mode', style: theme.textTheme.titleLarge),
           const SizedBox(height: 6),
           const Text(
-            'The schoolyard classic: how many kicks in a row before the cầu drops?',
+            'The schoolyard classic: how many kicks in a row before the shuttlecock drops?',
           ),
           const SizedBox(height: 12),
           OutlinedButton.icon(

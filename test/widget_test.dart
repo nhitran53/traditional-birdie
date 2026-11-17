@@ -1,20 +1,20 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:traditional_birdie/main.dart';
-import 'package:traditional_birdie/models/da_cau_match.dart';
+import 'package:traditional_birdie/models/shuttlecock_match.dart';
 import 'package:traditional_birdie/models/juggle_session.dart';
 
-DaCauMatch newMatch({int points = 21, int sets = 2, int? cap = 25}) =>
-    DaCauMatch(teamNames: ['A', 'B'], pointsPerSet: points, setsToWin: sets, pointCap: cap);
+ShuttlecockMatch newMatch({int points = 21, int sets = 2, int? cap = 25}) =>
+    ShuttlecockMatch(teamNames: ['A', 'B'], pointsPerSet: points, setsToWin: sets, pointCap: cap);
 
-void scoreTimes(DaCauMatch m, int team, int n) {
+void scoreTimes(ShuttlecockMatch m, int team, int n) {
   for (var i = 0; i < n; i++) {
     m.scorePoint(team);
   }
 }
 
 void main() {
-  group('DaCauMatch', () {
+  group('ShuttlecockMatch', () {
     test('rally winner scores and serves', () {
       final m = newMatch();
       m.scorePoint(1);

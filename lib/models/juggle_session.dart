@@ -1,5 +1,5 @@
-/// Traditional schoolyard đá cầu: count consecutive kicks before the
-/// shuttlecock (cầu) touches the ground.
+/// Traditional schoolyard shuttlecock kicking: count consecutive kicks
+/// before the shuttlecock touches the ground.
 class JugglePlayer {
   JugglePlayer(this.name);
 

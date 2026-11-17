@@ -1,11 +1,11 @@
-/// Scoring logic for a competitive đá cầu (Vietnamese shuttlecock) match.
+/// Scoring logic for a competitive shuttlecock-kicking match.
 ///
 /// Rally scoring: whoever wins the rally gets the point and serves next.
 /// A set is won by reaching [pointsPerSet] with a 2-point lead, or by
 /// reaching [pointCap] first (if a cap is set). First to [setsToWin] sets
 /// wins the match.
-class DaCauMatch {
-  DaCauMatch({
+class ShuttlecockMatch {
+  ShuttlecockMatch({
     required this.teamNames,
     this.pointsPerSet = 21,
     this.setsToWin = 2,
@@ -84,7 +84,7 @@ class DaCauMatch {
 }
 
 class _Snapshot {
-  _Snapshot.of(DaCauMatch m)
+  _Snapshot.of(ShuttlecockMatch m)
       : points = List.of(m.points),
         sets = List.of(m.sets),
         server = m.server,
@@ -97,7 +97,7 @@ class _Snapshot {
   final int setResultCount;
   final int? winner;
 
-  void restore(DaCauMatch m) {
+  void restore(ShuttlecockMatch m) {
     m.points = List.of(points);
     m.sets = List.of(sets);
     m.server = server;

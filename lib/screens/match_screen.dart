@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../models/da_cau_match.dart';
+import '../models/shuttlecock_match.dart';
 
 const _teamColors = [Color(0xFFD32F2F), Color(0xFF1976D2)];
 
 class MatchScreen extends StatefulWidget {
   const MatchScreen({super.key, required this.match});
 
-  final DaCauMatch match;
+  final ShuttlecockMatch match;
 
   @override
   State<MatchScreen> createState() => _MatchScreenState();
 }
 
 class _MatchScreenState extends State<MatchScreen> {
-  DaCauMatch get m => widget.match;
+  ShuttlecockMatch get m => widget.match;
 
   void _score(int team) {
     if (m.isOver) return;
@@ -111,7 +111,7 @@ class _MatchScreenState extends State<MatchScreen> {
 class _SetBar extends StatelessWidget {
   const _SetBar({required this.match});
 
-  final DaCauMatch match;
+  final ShuttlecockMatch match;
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ class TraditionalBirdieApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Đá Cầu Score',
+      title: 'Shuttlecock Score',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFD32F2F)),
