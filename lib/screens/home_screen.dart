@@ -12,8 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _teamA = TextEditingController(text: 'Red Team');
-  final _teamB = TextEditingController(text: 'Blue Team');
+  final _teamA = TextEditingController(text: 'Pink Team');
+  final _teamB = TextEditingController(text: 'Mint Team');
   int _pointsPerSet = 21;
   int _bestOf = 3;
 
@@ -34,9 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
       setsToWin: (_bestOf + 1) ~/ 2,
       pointCap: _pointsPerSet + 4,
     );
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => MatchScreen(match: match)),
-    );
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => MatchScreen(match: match)));
   }
 
   @override
@@ -47,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text('🪶', textAlign: TextAlign.center, style: TextStyle(fontSize: 64)),
+          const Center(child: BouncingFeather()),
           Text(
             'Traditional shuttlecock kicking',
             textAlign: TextAlign.center,
@@ -60,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _teamA,
             decoration: const InputDecoration(
               labelText: 'Team 1',
-              prefixIcon: Icon(Icons.circle, color: Colors.red),
+              prefixIcon: Icon(Icons.circle, color: Color(0xFFFFB5C2)),
               border: OutlineInputBorder(),
             ),
           ),
@@ -69,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _teamB,
             decoration: const InputDecoration(
               labelText: 'Team 2',
-              prefixIcon: Icon(Icons.circle, color: Colors.blue),
+              prefixIcon: Icon(Icons.circle, color: Color(0xFFA8E6CF)),
               border: OutlineInputBorder(),
             ),
           ),
@@ -107,7 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: _startMatch,
             icon: const Icon(Icons.sports_volleyball),
             label: const Text('Start match'),
-            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+            ),
           ),
           const Divider(height: 48),
           Text('Juggling mode', style: theme.textTheme.titleLarge),
@@ -117,15 +118,53 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 12),
           OutlinedButton.icon(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const JuggleScreen()),
-            ),
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const JuggleScreen())),
             icon: const Icon(Icons.repeat),
             label: const Text('Start juggling'),
-            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+            ),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// The home-screen mascot: a feather that gently floats up and down.
+class BouncingFeather extends StatefulWidget {
+  const BouncingFeather({super.key});
+
+  @override
+  State<BouncingFeather> createState() => _BouncingFeatherState();
+}
+
+class _BouncingFeatherState extends State<BouncingFeather>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1400),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, child) {
+        final t = Curves.easeInOut.transform(_c.value);
+        return Transform.translate(
+          offset: Offset(0, -14 * t),
+          child: Transform.rotate(angle: 0.25 * (t - 0.5), child: child),
+        );
+      },
+      child: const Text('🪶', style: TextStyle(fontSize: 72)),
     );
   }
 }

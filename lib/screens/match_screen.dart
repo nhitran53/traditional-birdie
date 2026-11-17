@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../models/shuttlecock_match.dart';
 
-const _teamColors = [Color(0xFFD32F2F), Color(0xFF1976D2)];
+// Soft pastel team colors with a darker ink for text.
+const _teamColors = [Color(0xFFFFB5C2), Color(0xFFA8E6CF)];
+const _ink = Color(0xFF4A3B4F);
 
 class MatchScreen extends StatefulWidget {
   const MatchScreen({super.key, required this.match});
@@ -26,9 +28,13 @@ class _MatchScreenState extends State<MatchScreen> {
     } else if (setEnded) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          content: Text('${m.teamNames[team]} wins the set ${m.setResults.last}'),
-        ));
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              '${m.teamNames[team]} wins the set ${m.setResults.last}',
+            ),
+          ),
+        );
     }
   }
 
@@ -39,7 +45,7 @@ class _MatchScreenState extends State<MatchScreen> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('🏆 Match over'),
+        title: const Text('🏆 Yay! Match over 🎉'),
         content: Text(
           '${m.teamNames[m.winner!]} wins ${m.sets[m.winner!]}–${m.sets[1 - m.winner!]}\n\n'
           'Sets: ${m.setResults.join(', ')}',
@@ -84,7 +90,7 @@ class _MatchScreenState extends State<MatchScreen> {
           if (pressure != null)
             Container(
               width: double.infinity,
-              color: Colors.amber.shade200,
+              color: const Color(0xFFFFF1B8),
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Text(
                 pressure,
@@ -154,50 +160,83 @@ class _TeamPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      child: InkWell(
-        onTap: onTap,
-        child: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(color: Colors.white, fontSize: 22),
-                  ),
-                  FittedBox(
-                    child: Text(
-                      '$points',
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
+      child: Material(
+        color: color,
+        elevation: 3,
+        shadowColor: color,
+        borderRadius: BorderRadius.circular(32),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          splashColor: Colors.white54,
+          child: Stack(
+            children: [
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      name,
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 120,
-                        fontWeight: FontWeight.bold,
+                        color: _ink,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  const Text(
-                    'tap to score',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-            if (serving)
-              Positioned(
-                top: 12,
-                right: 12,
-                child: Chip(
-                  avatar: const Text('🪶'),
-                  label: const Text('Serve'),
-                  backgroundColor: Colors.white,
+                    FittedBox(
+                      child: PopNumber(
+                        value: points,
+                        style: const TextStyle(
+                          color: _ink,
+                          fontSize: 120,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'tap to score ✨',
+                      style: TextStyle(color: _ink.withValues(alpha: 0.6)),
+                    ),
+                  ],
                 ),
               ),
-          ],
+              if (serving)
+                const Positioned(
+                  top: 14,
+                  right: 14,
+                  child: Chip(
+                    avatar: Text('🪶'),
+                    label: Text('Serve'),
+                    backgroundColor: Colors.white,
+                    side: BorderSide.none,
+                    shape: StadiumBorder(),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+/// A number that does a little bouncy pop every time it changes.
+class PopNumber extends StatelessWidget {
+  const PopNumber({super.key, required this.value, required this.style});
+
+  final int value;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 350),
+      switchInCurve: Curves.elasticOut,
+      transitionBuilder: (child, anim) =>
+          ScaleTransition(scale: anim, child: child),
+      child: Text('$value', key: ValueKey(value), style: style),
     );
   }
 }

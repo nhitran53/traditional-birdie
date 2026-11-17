@@ -78,7 +78,31 @@ void main() {
     });
   });
 
+  test('both teams shown when both are on set point at the cap', () {
+    final m = newMatch();
+    for (var i = 0; i < 24; i++) {
+      m.scorePoint(0);
+      m.scorePoint(1);
+    }
+    expect(m.pressureLabel(), 'Set point: A · Set point: B');
+  });
+
   group('JuggleSession', () {
+    test('dropping with zero kicks does not count an attempt', () {
+      final s = JuggleSession()..addPlayer('Lan');
+      expect(s.drop(), isFalse);
+      expect(s.players.first.attempts, 0);
+    });
+
+    test('re-selecting the active player keeps the streak', () {
+      final s = JuggleSession()..addPlayer('Lan');
+      s.kick();
+      s.kick();
+      s.select(0);
+      expect(s.streak, 2);
+      expect(s.players.first.attempts, 0);
+    });
+
     test('tracks streaks and personal bests', () {
       final s = JuggleSession()
         ..addPlayer('Lan')

@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../models/juggle_session.dart';
+import 'match_screen.dart' show PopNumber;
 
 class JuggleScreen extends StatefulWidget {
   const JuggleScreen({super.key});
 
   @override
   State<JuggleScreen> createState() => _JuggleScreenState();
+}
+
+String _cheer(int streak) {
+  if (streak == 0) return 'tap for each kick 🦶';
+  if (streak < 5) return 'nice start! 🐣';
+  if (streak < 10) return 'keep it up! 🌸';
+  if (streak < 25) return 'wow, so smooth! 🌈';
+  if (streak < 50) return 'on fire!! 🔥';
+  return 'legendary kicker 👑';
 }
 
 class _JuggleScreenState extends State<JuggleScreen> {
@@ -26,16 +36,21 @@ class _JuggleScreenState extends State<JuggleScreen> {
   void _drop() {
     final player = _session.active;
     final streak = _session.streak;
+    if (streak == 0) return;
     late bool isBest;
     setState(() => isBest = _session.drop());
     if (player == null) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(isBest && streak > 0
-            ? '🎉 New best for ${player.name}: $streak kicks!'
-            : '${player.name} dropped it at $streak'),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            isBest && streak > 0
+                ? '🎉 New best for ${player.name}: $streak kicks!'
+                : '${player.name} dropped it at $streak',
+          ),
+        ),
+      );
   }
 
   @override
@@ -51,14 +66,23 @@ class _JuggleScreenState extends State<JuggleScreen> {
         label: const Text('Player'),
       ),
       body: _session.players.isEmpty
-          ? const Center(child: Text('Add a player to start counting kicks'))
+          ? const Center(
+              child: Text(
+                '🪶\n\nAdd a player to start counting kicks!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+            )
           : Column(
               children: [
                 SizedBox(
                   height: 56,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     children: [
                       for (var i = 0; i < _session.players.length; i++)
                         Padding(
@@ -66,7 +90,8 @@ class _JuggleScreenState extends State<JuggleScreen> {
                           child: ChoiceChip(
                             label: Text(_session.players[i].name),
                             selected: _session.activeIndex == i,
-                            onSelected: (_) => setState(() => _session.select(i)),
+                            onSelected: (_) =>
+                                setState(() => _session.select(i)),
                           ),
                         ),
                     ],
@@ -74,24 +99,35 @@ class _JuggleScreenState extends State<JuggleScreen> {
                 ),
                 Expanded(
                   flex: 3,
-                  child: Material(
-                    color: theme.colorScheme.primaryContainer,
-                    child: InkWell(
-                      onTap: () => setState(_session.kick),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(active?.name ?? '', style: theme.textTheme.titleLarge),
-                            Text(
-                              '${_session.streak}',
-                              style: const TextStyle(
-                                fontSize: 120,
-                                fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Material(
+                      color: const Color(0xFFFFE3EC),
+                      borderRadius: BorderRadius.circular(32),
+                      clipBehavior: Clip.antiAlias,
+                      child: InkWell(
+                        onTap: () => setState(_session.kick),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                active?.name ?? '',
+                                style: theme.textTheme.titleLarge,
                               ),
-                            ),
-                            const Text('tap for each kick'),
-                          ],
+                              PopNumber(
+                                value: _session.streak,
+                                style: const TextStyle(
+                                  fontSize: 120,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              Text(
+                                _cheer(_session.streak),
+                                style: theme.textTheme.titleMedium,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -102,11 +138,11 @@ class _JuggleScreenState extends State<JuggleScreen> {
                   child: FilledButton.icon(
                     onPressed: _drop,
                     style: FilledButton.styleFrom(
-                      backgroundColor: theme.colorScheme.error,
+                      backgroundColor: const Color(0xFFFF8A80),
                       minimumSize: const Size.fromHeight(52),
                     ),
                     icon: const Icon(Icons.arrow_downward),
-                    label: const Text('Dropped!'),
+                    label: const Text('Oops, dropped!'),
                   ),
                 ),
                 Expanded(
@@ -116,11 +152,20 @@ class _JuggleScreenState extends State<JuggleScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Leaderboard', style: theme.textTheme.titleMedium),
+                        child: Text(
+                          'Leaderboard',
+                          style: theme.textTheme.titleMedium,
+                        ),
                       ),
                       for (final (i, p) in _session.leaderboard.indexed)
                         ListTile(
-                          leading: CircleAvatar(child: Text('${i + 1}')),
+                          leading: CircleAvatar(
+                            backgroundColor: const Color(0xFFFFF1B8),
+                            child: Text(
+                              const ['🥇', '🥈', '🥉'].elementAtOrNull(i) ??
+                                  '${i + 1}',
+                            ),
+                          ),
                           title: Text(p.name),
                           subtitle: Text('${p.attempts} attempts'),
                           trailing: Text(

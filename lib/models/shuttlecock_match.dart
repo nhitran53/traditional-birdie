@@ -69,6 +69,7 @@ class ShuttlecockMatch {
   /// "Set point: X" / "Match point: X" if the next rally could end the set.
   String? pressureLabel() {
     if (isOver) return null;
+    final labels = <String>[];
     for (var t = 0; t < 2; t++) {
       final saved = _Snapshot.of(this);
       points[t]++;
@@ -76,20 +77,20 @@ class ShuttlecockMatch {
       saved.restore(this);
       if (wouldWin) {
         final label = sets[t] + 1 >= setsToWin ? 'Match point' : 'Set point';
-        return '$label: ${teamNames[t]}';
+        labels.add('$label: ${teamNames[t]}');
       }
     }
-    return null;
+    return labels.isEmpty ? null : labels.join(' · ');
   }
 }
 
 class _Snapshot {
   _Snapshot.of(ShuttlecockMatch m)
-      : points = List.of(m.points),
-        sets = List.of(m.sets),
-        server = m.server,
-        setResultCount = m.setResults.length,
-        winner = m.winner;
+    : points = List.of(m.points),
+      sets = List.of(m.sets),
+      server = m.server,
+      setResultCount = m.setResults.length,
+      winner = m.winner;
 
   final List<int> points;
   final List<int> sets;

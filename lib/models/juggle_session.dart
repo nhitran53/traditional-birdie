@@ -22,6 +22,7 @@ class JuggleSession {
   }
 
   void select(int index) {
+    if (index == activeIndex) return;
     if (streak > 0) drop();
     activeIndex = index;
   }
@@ -34,7 +35,7 @@ class JuggleSession {
   /// Ends the current streak. Returns true if it set a new personal best.
   bool drop() {
     final p = active;
-    if (p == null) return false;
+    if (p == null || streak == 0) return false;
     p.attempts++;
     final isBest = streak > p.best;
     if (isBest) p.best = streak;
